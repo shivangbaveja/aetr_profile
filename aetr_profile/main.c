@@ -78,9 +78,9 @@ int main(void)
 				time_1min++;
 				if(time_1min>=60)
 				{
+					throttle_phase++;
 					throttle_update();			// this function will update the throttle pulse value every 60 second and when the whole flight profile is over it will make the throttle_phase counter zero
 					time_1min=0;
-					throttle_phase++;
 				}
 			}
 		}
@@ -185,7 +185,6 @@ void throttle_update()
 			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
 			break;
 		case 10:
-			//TIM_SetCompare3(TIM4,DESCENT);
 			finish=1;
 			TIM_SetCompare1(TIM4,1500);
 			TIM_SetCompare2(TIM4,1500);
