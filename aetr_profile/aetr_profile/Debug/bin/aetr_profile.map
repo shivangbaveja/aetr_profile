@@ -272,7 +272,7 @@ Linker script and memory map
 
                 0x20010000                _eram = 0x20010000
 
-.text           0x08000000     0x1230
+.text           0x08000000     0x1264
  *(.isr_vector)
  .isr_vector    0x08000000      0x134 ..\obj\startup_stm32f10x_hd.o
                 0x08000000                g_pfnVectors
@@ -415,26 +415,26 @@ Linker script and memory map
  .text.GPIO_PinRemapConfig
                 0x08000ba0       0xe0 ..\obj\stm32f10x_gpio.o
                 0x08000ba0                GPIO_PinRemapConfig
- .text.main     0x08000c80      0x184 ..\obj\main.o
+ .text.main     0x08000c80      0x194 ..\obj\main.o
                 0x08000c80                main
  .text.TIM3_Configuration
-                0x08000e04       0x50 ..\obj\main.o
-                0x08000e04                TIM3_Configuration
+                0x08000e14       0x50 ..\obj\main.o
+                0x08000e14                TIM3_Configuration
  .text.PWM_Output_Configuration
-                0x08000e54       0xe4 ..\obj\main.o
-                0x08000e54                PWM_Output_Configuration
+                0x08000e64       0xe4 ..\obj\main.o
+                0x08000e64                PWM_Output_Configuration
  .text.throttle_update
-                0x08000f38       0xec ..\obj\main.o
-                0x08000f38                throttle_update
+                0x08000f48      0x100 ..\obj\main.o
+                0x08000f48                throttle_update
  .text.aer_update
-                0x08001024      0x194 ..\obj\main.o
-                0x08001024                aer_update
+                0x08001048      0x1a4 ..\obj\main.o
+                0x08001048                aer_update
  .text.RCC_APB2PeriphClockCmd
-                0x080011b8       0x3c ..\obj\stm32f10x_rcc.o
-                0x080011b8                RCC_APB2PeriphClockCmd
+                0x080011ec       0x3c ..\obj\stm32f10x_rcc.o
+                0x080011ec                RCC_APB2PeriphClockCmd
  .text.RCC_APB1PeriphClockCmd
-                0x080011f4       0x3c ..\obj\stm32f10x_rcc.o
-                0x080011f4                RCC_APB1PeriphClockCmd
+                0x08001228       0x3c ..\obj\stm32f10x_rcc.o
+                0x08001228                RCC_APB1PeriphClockCmd
  *(.init)
  *(.fini)
  *crtbegin.o(.ctors)
@@ -450,35 +450,35 @@ Linker script and memory map
  *(.rodata*)
  *(.eh_fram e*)
 
-.glue_7         0x08001230        0x0
+.glue_7         0x08001264        0x0
  .glue_7        0x00000000        0x0 linker stubs
 
-.glue_7t        0x08001230        0x0
+.glue_7t        0x08001264        0x0
  .glue_7t       0x00000000        0x0 linker stubs
 
-.vfp11_veneer   0x08001230        0x0
+.vfp11_veneer   0x08001264        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x08001230        0x0
+.v4_bx          0x08001264        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x08001230        0x0
+.iplt           0x08001264        0x0
  .iplt          0x00000000        0x0 ..\obj\stm32f10x_tim.o
 
-.rel.dyn        0x08001230        0x0
+.rel.dyn        0x08001264        0x0
  .rel.iplt      0x00000000        0x0 ..\obj\stm32f10x_tim.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x08001230                __exidx_start = .
+                0x08001264                __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x08001230                __exidx_end = .
-                0x08001230                __etext = .
-                0x08001230                _sidata = __etext
+                0x08001264                __exidx_end = .
+                0x08001264                __etext = .
+                0x08001264                _sidata = __etext
 
-.data           0x20000000        0x0 load address 0x08001230
+.data           0x20000000        0x0 load address 0x08001264
                 0x20000000                __data_start__ = .
                 0x20000000                _sdata = __data_start__
  *(vtable)
@@ -505,37 +505,39 @@ Linker script and memory map
 .igot.plt       0x20000000        0x0
  .igot.plt      0x00000000        0x0 ..\obj\stm32f10x_tim.o
 
-.bss            0x20000000       0x18
+.bss            0x20000000       0x1c
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                __bss_start__ = .
                 0x20000000                _sbss = __bss_start__
  *(.bss*)
- .bss           0x20000000       0x18 ..\obj\main.o
+ .bss           0x20000000       0x1c ..\obj\main.o
                 0x20000000                time_now
                 0x20000004                old_time
                 0x20000008                time_1min
                 0x2000000c                throttle_phase
                 0x20000010                aer_phase
                 0x20000014                delay_counter
+                0x20000018                finish
  *(COMMON)
-                0x20000018                . = ALIGN (0x4)
-                0x20000018                __bss_end__ = .
-                0x20000018                _ebss = __bss_end__
+                0x2000001c                . = ALIGN (0x4)
+                0x2000001c                __bss_end__ = .
+                0x2000001c                _ebss = __bss_end__
 
-.heap           0x20000018        0x0
-                0x20000018                __end__ = .
-                0x20000018                _end = __end__
-                0x20000018                end = __end__
+.heap           0x2000001c        0x0
+                0x2000001c                __end__ = .
+                0x2000001c                _end = __end__
+                0x2000001c                end = __end__
  *(.heap*)
-                0x20000018                __HeapLimit = .
+                0x2000001c                __HeapLimit = .
 
-.co_stack       0x20000018      0x400
-                0x20000018                . = ALIGN (0x8)
+.co_stack       0x2000001c      0x404
+                0x20000020                . = ALIGN (0x8)
+ *fill*         0x2000001c        0x4 
  *(.co_stack .co_stack.*)
- .co_stack      0x20000018      0x400 ..\obj\startup_stm32f10x_hd.o
-                0x20000018                pulStack
+ .co_stack      0x20000020      0x400 ..\obj\startup_stm32f10x_hd.o
+                0x20000020                pulStack
                 0x20010000                __StackTop = (ORIGIN (ram) + 0x10000)
-                0x2000fc00                __StackLimit = (__StackTop - SIZEOF (.co_stack))
+                0x2000fbfc                __StackLimit = (__StackTop - SIZEOF (.co_stack))
                 0x20010000                PROVIDE (__stack, __StackTop)
                 0x00000001                ASSERT ((__StackLimit >= __HeapLimit), region ram  overflowed with stack)
 LOAD ..\obj\stm32f10x_tim.o
@@ -551,13 +553,13 @@ LOAD c:/program files (x86)/gnu tools arm embedded/4.9 2014q4/bin/../lib/gcc/arm
 END GROUP
 OUTPUT(aetr_profile.elf elf32-littlearm)
 
-.debug_info     0x00000000     0x371c
+.debug_info     0x00000000     0x372d
  .debug_info    0x00000000     0x1c58 ..\obj\stm32f10x_tim.o
  .debug_info    0x00001c58      0x479 ..\obj\system_stm32f10x.o
  .debug_info    0x000020d1       0xe9 ..\obj\startup_stm32f10x_hd.o
  .debug_info    0x000021ba      0x6e7 ..\obj\stm32f10x_gpio.o
- .debug_info    0x000028a1      0x5ee ..\obj\main.o
- .debug_info    0x00002e8f      0x88d ..\obj\stm32f10x_rcc.o
+ .debug_info    0x000028a1      0x5ff ..\obj\main.o
+ .debug_info    0x00002ea0      0x88d ..\obj\stm32f10x_rcc.o
 
 .debug_abbrev   0x00000000      0x86b
  .debug_abbrev  0x00000000      0x1b0 ..\obj\stm32f10x_tim.o
@@ -589,15 +591,15 @@ OUTPUT(aetr_profile.elf elf32-littlearm)
  .debug_ranges  0x000003b8       0x30 ..\obj\main.o
  .debug_ranges  0x000003e8      0x108 ..\obj\stm32f10x_rcc.o
 
-.debug_line     0x00000000     0x1a95
+.debug_line     0x00000000     0x1a99
  .debug_line    0x00000000      0xb37 ..\obj\stm32f10x_tim.o
  .debug_line    0x00000b37      0x247 ..\obj\system_stm32f10x.o
  .debug_line    0x00000d7e       0xba ..\obj\startup_stm32f10x_hd.o
  .debug_line    0x00000e38      0x40f ..\obj\stm32f10x_gpio.o
- .debug_line    0x00001247      0x332 ..\obj\main.o
- .debug_line    0x00001579      0x51c ..\obj\stm32f10x_rcc.o
+ .debug_line    0x00001247      0x336 ..\obj\main.o
+ .debug_line    0x0000157d      0x51c ..\obj\stm32f10x_rcc.o
 
-.debug_str      0x00000000     0x1832
+.debug_str      0x00000000     0x1839
  .debug_str     0x00000000      0xd3a ..\obj\stm32f10x_tim.o
                                 0xdfd (size before relaxing)
  .debug_str     0x00000d3a      0x18a ..\obj\system_stm32f10x.o
@@ -606,9 +608,9 @@ OUTPUT(aetr_profile.elf elf32-littlearm)
                                 0x15f (size before relaxing)
  .debug_str     0x00000f8c      0x396 ..\obj\stm32f10x_gpio.o
                                 0x539 (size before relaxing)
- .debug_str     0x00001322      0x110 ..\obj\main.o
-                                0x5a6 (size before relaxing)
- .debug_str     0x00001432      0x400 ..\obj\stm32f10x_rcc.o
+ .debug_str     0x00001322      0x117 ..\obj\main.o
+                                0x5ad (size before relaxing)
+ .debug_str     0x00001439      0x400 ..\obj\stm32f10x_rcc.o
                                 0x63a (size before relaxing)
 
 .comment        0x00000000       0x70

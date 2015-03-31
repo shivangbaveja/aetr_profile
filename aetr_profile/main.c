@@ -8,7 +8,7 @@ void PWM_Output_Configuration();
 void aer_update();
 void throttle_update();
 
-uint32_t time_now=0,old_time=0,time_1min=0,throttle_phase=0,aer_phase=0,delay_counter=0;
+uint32_t time_now=0,old_time=0,time_1min=0,throttle_phase=0,aer_phase=0,delay_counter=0,finish=0;
 
 int main(void)
 {
@@ -20,6 +20,8 @@ int main(void)
 	TIM_SetCompare2(TIM4,1500);
 	TIM_SetCompare3(TIM4,1000);
 	TIM_SetCompare4(TIM4,1500);
+
+	finish=0;
 
 	//delay for 15 seconds
 	while(1)
@@ -45,6 +47,8 @@ int main(void)
 		break;
 	}
 
+	throttle_update();
+
     while(1)
     {
     	time_now = TIM_GetCounter(TIM3);
@@ -58,9 +62,9 @@ int main(void)
 				time_1min++;
 				if(time_1min>=60)
 				{
+					throttle_phase++;
 					throttle_update();			// this function will update the throttle pulse value every 60 second and when the whole flight profile is over it will make the throttle_phase counter zero
 					time_1min=0;
-					throttle_phase++;
 				}
 			}
 		}
@@ -146,108 +150,114 @@ void PWM_Output_Configuration()
 
 void throttle_update()
 {
-	switch(throttle_phase)
+	if(finish!=1)
 	{
-	case 0:
-		TIM_SetCompare3(TIM4,TAKE_OFF_POWER_UP);
-		break;
-	case 1:
-		TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-		break;
-	case 2:
-		TIM_SetCompare3(TIM4,CLIMB);
-		break;
-	case 3:
-		TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-		break;
-	case 4:
-		TIM_SetCompare3(TIM4,DESCENT);
-		break;
-	case 5:
-		TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-		break;
-	case 6:
-		TIM_SetCompare3(TIM4,CLIMB);
-		break;
-	case 7:
-		TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-		break;
-	case 8:
-		TIM_SetCompare3(TIM4,DESCENT);
-		break;
-	case 9:
-		TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-		break;
-	case 10:
-		TIM_SetCompare3(TIM4,DESCENT);
-		break;
-	case 11:
-		TIM_Cmd(TIM4, DISABLE);
-		throttle_phase=0;
-		break;
-	default:
-		throttle_phase=0;
-		break;
+		switch(throttle_phase)
+		{
+		case 0:
+			TIM_SetCompare3(TIM4,TAKE_OFF_POWER_UP);
+			break;
+		case 1:
+			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+			break;
+		case 2:
+			TIM_SetCompare3(TIM4,CLIMB);
+			break;
+		case 3:
+			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+			break;
+		case 4:
+			TIM_SetCompare3(TIM4,DESCENT);
+			break;
+		case 5:
+			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+			break;
+		case 6:
+			TIM_SetCompare3(TIM4,CLIMB);
+			break;
+		case 7:
+			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+			break;
+		case 8:
+			TIM_SetCompare3(TIM4,DESCENT);
+			break;
+		case 9:
+			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+			break;
+		case 10:
+			//TIM_SetCompare3(TIM4,DESCENT);
+			finish=1;
+			TIM_SetCompare1(TIM4,1500);
+			TIM_SetCompare2(TIM4,1500);
+			TIM_SetCompare3(TIM4,1000);
+			TIM_SetCompare4(TIM4,1500);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
 void aer_update()
 {
-	switch(aer_phase)
+	if(finish!=1)
 	{
-	case 0:
-		TIM_SetCompare1(TIM4,ZERO_SEC);
-		TIM_SetCompare2(TIM4,ZERO_SEC);
-		TIM_SetCompare4(TIM4,ZERO_SEC);
-		break;
-	case 1:
-		TIM_SetCompare1(TIM4,ONE_SEC);
-		TIM_SetCompare2(TIM4,ONE_SEC);
-		TIM_SetCompare4(TIM4,ONE_SEC);
-		break;
-	case 2:
-		TIM_SetCompare1(TIM4,TWO_SEC);
-		TIM_SetCompare2(TIM4,TWO_SEC);
-		TIM_SetCompare4(TIM4,TWO_SEC);
-		break;
-	case 3:
-		TIM_SetCompare1(TIM4,THREE_SEC);
-		TIM_SetCompare2(TIM4,THREE_SEC);
-		TIM_SetCompare4(TIM4,THREE_SEC);
-		break;
-	case 4:
-		TIM_SetCompare1(TIM4,FOUR_SEC);
-		TIM_SetCompare2(TIM4,FOUR_SEC);
-		TIM_SetCompare4(TIM4,FOUR_SEC);
-		break;
-	case 5:
-		TIM_SetCompare1(TIM4,FIVE_SEC);
-		TIM_SetCompare2(TIM4,FIVE_SEC);
-		TIM_SetCompare4(TIM4,FIVE_SEC);
-		break;
-	case 6:
-		TIM_SetCompare1(TIM4,SIX_SEC);
-		TIM_SetCompare2(TIM4,SIX_SEC);
-		TIM_SetCompare4(TIM4,SIX_SEC);
-		break;
-	case 7:
-		TIM_SetCompare1(TIM4,SEVEN_SEC);
-		TIM_SetCompare2(TIM4,SEVEN_SEC);
-		TIM_SetCompare4(TIM4,SEVEN_SEC);
-		break;
-	case 8:
-		TIM_SetCompare1(TIM4,EIGHT_SEC);
-		TIM_SetCompare2(TIM4,EIGHT_SEC);
-		TIM_SetCompare4(TIM4,EIGHT_SEC);
-		break;
-	case 9:
-		TIM_SetCompare1(TIM4,NINE_SEC);
-		TIM_SetCompare2(TIM4,NINE_SEC);
-		TIM_SetCompare4(TIM4,NINE_SEC);
-		aer_phase=0;
-		break;
-	default:
-		aer_phase=0;
-		break;
+		switch(aer_phase)
+		{
+		case 0:
+			TIM_SetCompare1(TIM4,ZERO_SEC);
+			TIM_SetCompare2(TIM4,ZERO_SEC);
+			TIM_SetCompare4(TIM4,ZERO_SEC);
+			break;
+		case 1:
+			TIM_SetCompare1(TIM4,ONE_SEC);
+			TIM_SetCompare2(TIM4,ONE_SEC);
+			TIM_SetCompare4(TIM4,ONE_SEC);
+			break;
+		case 2:
+			TIM_SetCompare1(TIM4,TWO_SEC);
+			TIM_SetCompare2(TIM4,TWO_SEC);
+			TIM_SetCompare4(TIM4,TWO_SEC);
+			break;
+		case 3:
+			TIM_SetCompare1(TIM4,THREE_SEC);
+			TIM_SetCompare2(TIM4,THREE_SEC);
+			TIM_SetCompare4(TIM4,THREE_SEC);
+			break;
+		case 4:
+			TIM_SetCompare1(TIM4,FOUR_SEC);
+			TIM_SetCompare2(TIM4,FOUR_SEC);
+			TIM_SetCompare4(TIM4,FOUR_SEC);
+			break;
+		case 5:
+			TIM_SetCompare1(TIM4,FIVE_SEC);
+			TIM_SetCompare2(TIM4,FIVE_SEC);
+			TIM_SetCompare4(TIM4,FIVE_SEC);
+			break;
+		case 6:
+			TIM_SetCompare1(TIM4,SIX_SEC);
+			TIM_SetCompare2(TIM4,SIX_SEC);
+			TIM_SetCompare4(TIM4,SIX_SEC);
+			break;
+		case 7:
+			TIM_SetCompare1(TIM4,SEVEN_SEC);
+			TIM_SetCompare2(TIM4,SEVEN_SEC);
+			TIM_SetCompare4(TIM4,SEVEN_SEC);
+			break;
+		case 8:
+			TIM_SetCompare1(TIM4,EIGHT_SEC);
+			TIM_SetCompare2(TIM4,EIGHT_SEC);
+			TIM_SetCompare4(TIM4,EIGHT_SEC);
+			break;
+		case 9:
+			TIM_SetCompare1(TIM4,NINE_SEC);
+			TIM_SetCompare2(TIM4,NINE_SEC);
+			TIM_SetCompare4(TIM4,NINE_SEC);
+			aer_phase=0;
+			break;
+		default:
+			aer_phase=0;
+			break;
+		}
 	}
 }
