@@ -25,9 +25,10 @@
         <Option name="nostartfiles" value="1"/>
         <Option name="LTO" value="0"/>
         <Option name="IsNewStartupCode" value="1"/>
+        <Option name="Library" value="Not use C Library"/>
         <LinkedLibraries/>
         <MemoryAreas debugInFlashNotRAM="1">
-          <Memory name="IROM1" type="ReadOnly" size="0x00080000" startValue="0x08000000"/>
+          <Memory name="IROM1" type="ReadOnly" size="0x00080000" startValue="0x0800D000"/>
           <Memory name="IRAM1" type="ReadWrite" size="0x00010000" startValue="0x20000000"/>
           <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
           <Memory name="IRAM2" type="ReadWrite" size="" startValue=""/>
@@ -80,13 +81,13 @@
     <File name="cmsis_boot/system_stm32f10x.c" path="cmsis_boot/system_stm32f10x.c" type="1"/>
     <File name="cmsis/core_cmInstr.h" path="cmsis/core_cmInstr.h" type="1"/>
     <File name="cmsis_boot/system_stm32f10x.h" path="cmsis_boot/system_stm32f10x.h" type="1"/>
-    <File name="stm_lib/inc/stm32f10x_tim.h" path="stm_lib/inc/stm32f10x_tim.h" type="1"/>
     <File name="cmsis/core_cm3.h" path="cmsis/core_cm3.h" type="1"/>
+    <File name="stm_lib/inc/stm32f10x_tim.h" path="stm_lib/inc/stm32f10x_tim.h" type="1"/>
     <File name="cmsis_boot" path="" type="2"/>
     <File name="stm_lib/inc/stm32f10x_rcc.h" path="stm_lib/inc/stm32f10x_rcc.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_rcc.c" path="stm_lib/src/stm32f10x_rcc.c" type="1"/>
-    <File name="stm_lib/inc/duty_define.h" path="stm_lib/inc/duty_define.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_tim.c" path="stm_lib/src/stm32f10x_tim.c" type="1"/>
+    <File name="stm_lib/inc/duty_define.h" path="stm_lib/inc/duty_define.h" type="1"/>
     <File name="cmsis_boot/startup" path="" type="2"/>
     <File name="cmsis/core_cmFunc.h" path="cmsis/core_cmFunc.h" type="1"/>
     <File name="cmsis_boot/startup/startup_stm32f10x_hd.c" path="cmsis_boot/startup/startup_stm32f10x_hd.c" type="1"/>

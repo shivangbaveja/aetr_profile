@@ -5,10 +5,12 @@
 
 void TIM3_Configuration(void);
 void PWM_Output_Configuration();
-void aer_update();
-void throttle_update();
+void pulse_val_change();
+void set_pulse();
 
-uint32_t time_now=0,old_time=0,time_1min=0,throttle_phase=0,aer_phase=0,delay_counter=0,finish=0;
+uint32_t time_now=0,old_time=0;
+uint16_t pulse_val=0;
+uint8_t time_10sec=0, delay_counter=0;
 
 int main(void)
 {
@@ -16,12 +18,11 @@ int main(void)
 	PWM_Output_Configuration();
 
 	//setting PWM pulses two neutral position
-	TIM_SetCompare1(TIM4,1500);
-	TIM_SetCompare2(TIM4,1500);
-	TIM_SetCompare3(TIM4,1000);
-	TIM_SetCompare4(TIM4,1500);
-
-	finish=0;
+	pulse_val=1000;
+	TIM_SetCompare1(TIM4,pulse_val);
+	TIM_SetCompare2(TIM4,pulse_val);
+	TIM_SetCompare3(TIM4,pulse_val);
+	TIM_SetCompare4(TIM4,pulse_val);
 
 	//delay for 15 seconds
 	while(1)
@@ -44,47 +45,11 @@ int main(void)
 			}
 		}
 		if(delay_counter>=10)
-		break;
+		{
+			delay_counter=0;
+			pulse_val_change();
+		}
 	}
-
-	throttle_update();
-
-    while(1)
-    {
-    	time_now = TIM_GetCounter(TIM3);
-    	if(time_now < old_time)
-		{
-			if((time_now + 50000 - old_time) > 2000)
-			{
-				old_time = time_now;
-				aer_update();		//change the aileron, elevator, rudder pulse and set aer_pase to zero after the flight profile is over
-				aer_phase++;
-				time_1min++;
-				if(time_1min>=60)
-				{
-					throttle_phase++;
-					throttle_update();			// this function will update the throttle pulse value every 60 second and when the whole flight profile is over it will make the throttle_phase counter zero
-					time_1min=0;
-				}
-			}
-		}
-		else
-		{
-			if((time_now - old_time) > 2000)
-			{
-				old_time = time_now;
-				aer_update();		//change the aileron, elevator, rudder pulse and set aer_pase to zero after the flight profile is over
-				aer_phase++;
-				time_1min++;
-				if(time_1min>=60)
-				{
-					throttle_phase++;
-					throttle_update();			// this function will update the throttle pulse value every 60 second and when the whole flight profile is over it will make the throttle_phase counter zero
-					time_1min=0;
-				}
-			}
-		}
-    }
 }
 void TIM3_Configuration(void)
 {
@@ -148,115 +113,17 @@ void PWM_Output_Configuration()
 	TIM_Cmd(TIM4, ENABLE);
 }
 
-void throttle_update()
+void pulse_val_change()
 {
-	if(finish!=1)
-	{
-		switch(throttle_phase)
-		{
-		case 0:
-			TIM_SetCompare3(TIM4,TAKE_OFF_POWER_UP);
-			break;
-		case 1:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-			break;
-		case 2:
-			TIM_SetCompare3(TIM4,CLIMB);
-			break;
-		case 3:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-			break;
-		case 4:
-			TIM_SetCompare3(TIM4,DESCENT);
-			break;
-		case 5:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-			break;
-		case 6:
-			TIM_SetCompare3(TIM4,CLIMB);
-			break;
-		case 7:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-			break;
-		case 8:
-			TIM_SetCompare3(TIM4,DESCENT);
-			break;
-		case 9:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
-			break;
-		case 10:
-			finish=1;
-			TIM_SetCompare1(TIM4,1500);
-			TIM_SetCompare2(TIM4,1500);
-			TIM_SetCompare3(TIM4,1000);
-			TIM_SetCompare4(TIM4,1500);
-			break;
-		default:
-			break;
-		}
-	}
+	pulse_val+=50;
+	if(pulse_val>2000)
+		pulse_val=1000;
+	set_pulse();
 }
-
-void aer_update()
+void set_pulse()
 {
-	if(finish!=1)
-	{
-		switch(aer_phase)
-		{
-		case 0:
-			TIM_SetCompare1(TIM4,ZERO_SEC);
-			TIM_SetCompare2(TIM4,ZERO_SEC);
-			TIM_SetCompare4(TIM4,ZERO_SEC);
-			break;
-		case 1:
-			TIM_SetCompare1(TIM4,ONE_SEC);
-			TIM_SetCompare2(TIM4,ONE_SEC);
-			TIM_SetCompare4(TIM4,ONE_SEC);
-			break;
-		case 2:
-			TIM_SetCompare1(TIM4,TWO_SEC);
-			TIM_SetCompare2(TIM4,TWO_SEC);
-			TIM_SetCompare4(TIM4,TWO_SEC);
-			break;
-		case 3:
-			TIM_SetCompare1(TIM4,THREE_SEC);
-			TIM_SetCompare2(TIM4,THREE_SEC);
-			TIM_SetCompare4(TIM4,THREE_SEC);
-			break;
-		case 4:
-			TIM_SetCompare1(TIM4,FOUR_SEC);
-			TIM_SetCompare2(TIM4,FOUR_SEC);
-			TIM_SetCompare4(TIM4,FOUR_SEC);
-			break;
-		case 5:
-			TIM_SetCompare1(TIM4,FIVE_SEC);
-			TIM_SetCompare2(TIM4,FIVE_SEC);
-			TIM_SetCompare4(TIM4,FIVE_SEC);
-			break;
-		case 6:
-			TIM_SetCompare1(TIM4,SIX_SEC);
-			TIM_SetCompare2(TIM4,SIX_SEC);
-			TIM_SetCompare4(TIM4,SIX_SEC);
-			break;
-		case 7:
-			TIM_SetCompare1(TIM4,SEVEN_SEC);
-			TIM_SetCompare2(TIM4,SEVEN_SEC);
-			TIM_SetCompare4(TIM4,SEVEN_SEC);
-			break;
-		case 8:
-			TIM_SetCompare1(TIM4,EIGHT_SEC);
-			TIM_SetCompare2(TIM4,EIGHT_SEC);
-			TIM_SetCompare4(TIM4,EIGHT_SEC);
-			break;
-		case 9:
-			TIM_SetCompare1(TIM4,NINE_SEC);
-			TIM_SetCompare2(TIM4,NINE_SEC);
-			TIM_SetCompare4(TIM4,NINE_SEC);
-			aer_phase=0;
-			break;
-		default:
-			aer_phase=0;
-			break;
-		}
-	}
+	TIM_SetCompare1(TIM4,pulse_val);
+	TIM_SetCompare2(TIM4,pulse_val);
+	TIM_SetCompare3(TIM4,pulse_val);
+	TIM_SetCompare4(TIM4,pulse_val);
 }
