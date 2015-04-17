@@ -11,6 +11,7 @@ void set_pulse();
 uint32_t time_now=0,old_time=0;
 uint16_t pulse_val=0;
 uint8_t time_10sec=0, delay_counter=0;
+int start=0;
 
 int main(void)
 {
@@ -44,10 +45,15 @@ int main(void)
 				old_time = time_now;
 			}
 		}
-		if(delay_counter>=10)
+		if(delay_counter>=5)
 		{
 			delay_counter=0;
-			pulse_val_change();
+			if(start>1)
+			{
+				pulse_val_change();
+			}
+			else if(start==0)
+				start++;
 		}
 	}
 }
@@ -117,7 +123,10 @@ void pulse_val_change()
 {
 	pulse_val+=50;
 	if(pulse_val>2000)
+	{
 		pulse_val=1000;
+		start=-1;
+	}
 	set_pulse();
 }
 void set_pulse()
