@@ -48,7 +48,7 @@ int main(void)
 		if(delay_counter>=5)
 		{
 			delay_counter=0;
-			if(start>1)
+			if(start>=1)
 			{
 				pulse_val_change();
 			}
