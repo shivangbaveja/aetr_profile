@@ -15,6 +15,13 @@ int main(void)
 	TIM3_Configuration();
 	PWM_Output_Configuration();
 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
 	//setting PWM pulses two neutral position
 	TIM_SetCompare1(TIM4,1500);
 	TIM_SetCompare2(TIM4,1500);
@@ -56,9 +63,9 @@ int main(void)
 		{
 			if((time_now + 50000 - old_time) > 2000)
 			{
+				GPIOB->ODR ^= GPIO_Pin_5;
 				old_time = time_now;
 				aer_update();		//change the aileron, elevator, rudder pulse and set aer_pase to zero after the flight profile is over
-				aer_phase++;
 				time_1min++;
 				if(time_1min>=60)
 				{
@@ -72,9 +79,9 @@ int main(void)
 		{
 			if((time_now - old_time) > 2000)
 			{
+				GPIOB->ODR ^= GPIO_Pin_5;
 				old_time = time_now;
 				aer_update();		//change the aileron, elevator, rudder pulse and set aer_pase to zero after the flight profile is over
-				aer_phase++;
 				time_1min++;
 				if(time_1min>=60)
 				{
@@ -207,51 +214,72 @@ void aer_update()
 			TIM_SetCompare1(TIM4,ZERO_SEC);
 			TIM_SetCompare2(TIM4,ZERO_SEC);
 			TIM_SetCompare4(TIM4,ZERO_SEC);
+			aer_phase++;
 			break;
 		case 1:
 			TIM_SetCompare1(TIM4,ONE_SEC);
 			TIM_SetCompare2(TIM4,ONE_SEC);
 			TIM_SetCompare4(TIM4,ONE_SEC);
+			aer_phase++;
 			break;
 		case 2:
 			TIM_SetCompare1(TIM4,TWO_SEC);
 			TIM_SetCompare2(TIM4,TWO_SEC);
 			TIM_SetCompare4(TIM4,TWO_SEC);
+			aer_phase++;
 			break;
 		case 3:
 			TIM_SetCompare1(TIM4,THREE_SEC);
 			TIM_SetCompare2(TIM4,THREE_SEC);
 			TIM_SetCompare4(TIM4,THREE_SEC);
+			aer_phase++;
 			break;
 		case 4:
 			TIM_SetCompare1(TIM4,FOUR_SEC);
 			TIM_SetCompare2(TIM4,FOUR_SEC);
 			TIM_SetCompare4(TIM4,FOUR_SEC);
+			aer_phase++;
 			break;
 		case 5:
 			TIM_SetCompare1(TIM4,FIVE_SEC);
 			TIM_SetCompare2(TIM4,FIVE_SEC);
 			TIM_SetCompare4(TIM4,FIVE_SEC);
+			aer_phase++;
 			break;
 		case 6:
 			TIM_SetCompare1(TIM4,SIX_SEC);
 			TIM_SetCompare2(TIM4,SIX_SEC);
 			TIM_SetCompare4(TIM4,SIX_SEC);
+			aer_phase++;
 			break;
 		case 7:
 			TIM_SetCompare1(TIM4,SEVEN_SEC);
 			TIM_SetCompare2(TIM4,SEVEN_SEC);
 			TIM_SetCompare4(TIM4,SEVEN_SEC);
+			aer_phase++;
 			break;
 		case 8:
 			TIM_SetCompare1(TIM4,EIGHT_SEC);
 			TIM_SetCompare2(TIM4,EIGHT_SEC);
 			TIM_SetCompare4(TIM4,EIGHT_SEC);
+			aer_phase++;
 			break;
 		case 9:
 			TIM_SetCompare1(TIM4,NINE_SEC);
 			TIM_SetCompare2(TIM4,NINE_SEC);
 			TIM_SetCompare4(TIM4,NINE_SEC);
+			aer_phase++;
+			break;
+		case 10:
+			TIM_SetCompare1(TIM4,TEN_SEC);
+			TIM_SetCompare2(TIM4,TEN_SEC);
+			TIM_SetCompare4(TIM4,TEN_SEC);
+			aer_phase++;
+			break;
+		case 11:
+			TIM_SetCompare1(TIM4,ELEVEN_SEC);
+			TIM_SetCompare2(TIM4,ELEVEN_SEC);
+			TIM_SetCompare4(TIM4,ELEVEN_SEC);
 			aer_phase=0;
 			break;
 		default:
