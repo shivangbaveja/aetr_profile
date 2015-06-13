@@ -30,7 +30,7 @@ int main(void)
 
 	finish=0;
 
-	//delay for 15 seconds
+	//delay for 10 seconds
 	while(1)
 	{
 		time_now = TIM_GetCounter(TIM3);
@@ -54,6 +54,7 @@ int main(void)
 		break;
 	}
 
+	TIM_SetCompare3(TIM4,1220);
 	throttle_update();
 
     while(1)
@@ -162,34 +163,34 @@ void throttle_update()
 		switch(throttle_phase)
 		{
 		case 0:
-			TIM_SetCompare3(TIM4,TAKE_OFF_POWER_UP);
+//			TIM_SetCompare3(TIM4,TAKE_OFF_POWER_UP);
 			break;
 		case 1:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+//			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
 			break;
 		case 2:
-			TIM_SetCompare3(TIM4,CLIMB);
+//			TIM_SetCompare3(TIM4,CLIMB);
 			break;
 		case 3:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+//			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
 			break;
 		case 4:
-			TIM_SetCompare3(TIM4,DESCENT);
+//			TIM_SetCompare3(TIM4,DESCENT);
 			break;
 		case 5:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+//			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
 			break;
 		case 6:
-			TIM_SetCompare3(TIM4,CLIMB);
+//			TIM_SetCompare3(TIM4,CLIMB);
 			break;
 		case 7:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+//			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
 			break;
 		case 8:
-			TIM_SetCompare3(TIM4,DESCENT);
+//			TIM_SetCompare3(TIM4,DESCENT);
 			break;
 		case 9:
-			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
+//			TIM_SetCompare3(TIM4,MAINTAIN_ALT);
 			break;
 		case 10:
 			finish=1;
